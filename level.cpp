@@ -11,7 +11,7 @@ Level::~Level()
     if(cubes[i])
     {
       delete[] cubes[i];
-      cubse[i] = NULL;
+      cubes[i] = NULL;
     }
 
   if(cubes)
@@ -37,9 +37,9 @@ bool Level::loadLevel( QString fileName )
   // data 1 2 3 4 5 6 7 8 7 8
   // ....
   // data
-  parseString = QString.append(file.readLine()).split(' ');
-  width = (QString)(parseString.first()).toInt();
-  height = (QString)(parseString.last()).toInt();
+  parseString = (QString("").append(file.readLine())).split(" ");
+  width = ((QString)(parseString.first())).toInt();
+  height = ((QString)(parseString.last())).toInt();
 
   cubes = new Cube*[height];
 
@@ -47,8 +47,8 @@ bool Level::loadLevel( QString fileName )
   for( int i = 0; i < height; i++) {
     cubes[i] = new Cube[width];
 
-    parseString = QString.append(file.readLine()).split(' ');
-    if(parseString == NULL)
+    parseString = (QString("").append(file.readLine())).split(' ');
+    if(parseString.isEmpty())
       return false;
 
     if(parseString.length() < width)
@@ -56,7 +56,7 @@ bool Level::loadLevel( QString fileName )
 
     for( int j = 0; j < width; j++ )
     {
-      transp = (QString)(parseString.at(j)).toInt();
+      transp = ((QString)(parseString.at(j))).toInt();
       cubes[i][j].setTransparent((bool)transp);
     }
   }
@@ -75,7 +75,7 @@ Cube *Level::getCube( int x, int y )
   return NULL;
 }
 
-bool getCoord( Cube* cube, int* x, int* y )
+bool Level::getCoord( Cube* cube, int* x, int* y )
 {
   for( int i = 0; i < height; i++ )
     for( int j = 0; j < width; j++ )

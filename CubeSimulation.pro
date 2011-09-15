@@ -13,9 +13,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
            cubesimulationwidget.cpp \
            level.cpp \
-           environment.cpp
+           environment.cpp \
+    agent.cpp
 
 HEADERS  += cubesimulationwidget.h \
             cube.h \
             level.h \
-            environment.h
+            environment.h \
+    agent.h
+
+
