@@ -8,30 +8,21 @@
 
 #include "cube.h"
 #include "level.h"
-#include "agent.h"
+#include "agentmanager.h"
+#include "map.h"
 
 class Environment
 {
 private:
-  Level *levels;
-  int levelCount;
-  Agent *redTeam;
-  Agent *blueTeam;
+  Map realWorld;
+  AgentManager redTeam;
+  AgentManager blueTeam;
 public:
     Environment();
     ~Environment();
 
-    bool loadLevels( QString );
-
-
-    Cube* getCube( int, int, int );
-    bool getCoord( Cube*, int*, int* );
-
     // here will be AGENT API
     bool moveMe (Cube* whereTo);
-
-    QList<Cube*> getAround( int, int, int );
-
 };
 
 #endif // ENVIRONMENT_H

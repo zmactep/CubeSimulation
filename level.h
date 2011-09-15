@@ -32,6 +32,8 @@ public:
     {
       return height;
     }
+
+    Level operator = ( Level& );
 };
 
 #endif // LEVEL_H

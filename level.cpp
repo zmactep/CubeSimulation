@@ -89,3 +89,17 @@ bool Level::getCoord( Cube* cube, int* x, int* y )
 
   return false;
 }
+
+Level Level::operator = ( Level &l)
+{
+    width = l.width;
+    height = l.height;
+    cubes = new Cube*[height];
+    for ( int i=0; i<height; i++ )
+        cubes[i] = new Cube[width];
+    for ( i=0; i<height; i++ )
+        for( int j=0; j<width; j++ )
+        {
+            cubes[i][j] = l.cubes[i][j];
+        }
+}

@@ -14,12 +14,24 @@ SOURCES += main.cpp\
            cubesimulationwidget.cpp \
            level.cpp \
            environment.cpp \
-    agent.cpp
+    agent.cpp \
+    map.cpp \
+    agentmanager.cpp
 
 HEADERS  += cubesimulationwidget.h \
             cube.h \
             level.h \
             environment.h \
-    agent.h
+    agent.h \
+    map.h \
+    agentmanager.h
+
+OTHER_FILES +=
+
+
+
+
+
+
 
 
