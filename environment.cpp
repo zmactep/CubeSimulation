@@ -46,28 +46,33 @@ QList<Cube*> Environment::getAround( int level, int x, int y )
   if(level > levelCount || level < 0)
     return NULL;
 
-  Level* current = levels[level];
+  Level* current = &levels[level];
   int w = current->getWidth(),
       h = current->getHeight();
 
-  if(x < 0 || x > w || y < 0 || y > h)
+  if(x < 0 || x >= w || y < 0 || y >= h)
     return NULL;
 
   QList<Cube*> list;
 
   // LIST
-  // UP UP UP
-  // UP UP UP
-  // UP UP UP
-  // CU CU CU
-  // CU __ CU
-  // CU CU CU
-  // DN DN DN
-  // DN DN DN
-  // DN DN DN
+  // UP UP UP   1  2  3
+  // UP UP UP   4  5  6
+  // UP UP UP   7  8  9
+  // CU CU CU   A  B  C
+  // CU __ CU   D     E
+  // CU CU CU   F 10 11
+  // DN DN DN  12 13 14
+  // DN DN DN  15 16 17
+  // DN DN DN  18 19 1A
 
-  Level* up = levels[level-1];
-  Level* down = levels[level+1];
+  bool west, east, north, south, up, down;
+  west = x;
+  east = (w - 1) - x;
+  north = y;
+  south = (h - 1) - y;
+  up = level;
+  down = (levelCount - 1) - level;
 
 
 }
@@ -77,7 +82,7 @@ Cube* Environment::getCube(int level, int x, int y)
   if(level > levelCount || level < 0)
     return NULL;
 
-  Level* current = levels[level];
+  Level* current = &levels[level];
   int w = current->getWidth(),
       h = current->getHeight();
 
