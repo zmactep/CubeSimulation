@@ -41,6 +41,8 @@ bool Map::loadLevels( QString fileName )
   return true;
 }
 
+
+//  Looks like shit, DON`T YOU THINK SO?!
 QList<Cube*> Map::getAround( int level, int x, int y )
 {
    QList<Cube*> list;
@@ -207,4 +209,5 @@ Map Map::operator =( Map &m ) {
     levels = new Level[levelCount];
     for (int i = 0; i<levelCount; i++)
         levels[i] = m.levels[i];
+    return *this;
 }

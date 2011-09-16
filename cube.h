@@ -8,6 +8,7 @@ class Cube
 private:
   bool transparent;
   int infection;
+  int teamColor;
 public:
     Cube(){}
 
@@ -19,6 +20,16 @@ public:
     inline bool isTransparent( void )
     {
       return transparent;
+    }
+
+    inline void setTeamColor( int color )
+    {
+        teamColor = color;
+    }
+
+    inline int getTeamColor (void )
+    {
+        return teamColor;
     }
 
     inline void incInfection( void )

@@ -97,7 +97,7 @@ Level Level::operator = ( Level &l)
     cubes = new Cube*[height];
     for ( int i=0; i<height; i++ )
         cubes[i] = new Cube[width];
-    for ( i=0; i<height; i++ )
+    for ( int i=0; i<height; i++ )
         for( int j=0; j<width; j++ )
         {
             cubes[i][j] = l.cubes[i][j];

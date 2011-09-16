@@ -24,9 +24,11 @@ HEADERS  += cubesimulationwidget.h \
             environment.h \
     agent.h \
     map.h \
-    agentmanager.h
+    agentmanager.h \
+    teamcolors.h
 
 OTHER_FILES +=
+
 
 
 
