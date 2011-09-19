@@ -11,23 +11,18 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-           cubesimulationwidget.cpp \
-           level.cpp \
-           environment.cpp \
-    agent.cpp \
-    map.cpp \
-    agentmanager.cpp
+					  cubesimulationwidget.cpp \
+					  map.cpp \
+    environment.cpp
 
 HEADERS  += cubesimulationwidget.h \
-            cube.h \
-            level.h \
-            environment.h \
-    agent.h \
-    map.h \
-    agentmanager.h \
-    teamcolors.h
+					   cube.h \
+                       map.h \
+    environment.h
 
 OTHER_FILES +=
+
+
 
 
 

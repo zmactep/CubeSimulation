@@ -1,31 +1,66 @@
+//!  Environment class.
+/*!
+  The main Simulation class. It has the real Map and agents managers.
+  Gives the agent managers API for actions in the Map.
+*/
+
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
-#include <QString>
-#include <QStringList>
-#include <QList>
-#include <QFile>
-
-#include "cube.h"
-#include "level.h"
-#include "agentmanager.h"
 #include "map.h"
 
 class Environment
 {
 private:
-  Map realWorld;
-  AgentManager redTeam;
-  AgentManager blueTeam;
-public:
-  Environment();
-  ~Environment();
+  //! Real map.
+  /*!
+    The real map, that has the information of all cubes state.
+  */
+  Map *realMap;
 
-  // here will be AGENT API
-  bool moveAgent ( Cube* whereTo ); //move agent to cube whereTo
-  bool viewArea ( Cube* startPoint); // get a view around startPoint
-  bool createAgent (Cube* whereTo, int teamColor);
-  bool killAgent (Cube* whereTo );
+public:
+  Environment()
+  {
+    realMap = NULL;
+  }
+
+  Environment( Map* map ) : realMap(map)
+  {
+  }
+
+  ~Environment()
+  {
+    deleteMap();
+  }
+
+  inline Map* setMap( Map* map ) : realMap(map)
+  {
+    return realMap;
+  }
+
+  inline Map* changeMap( Map* map )
+  {
+    Map* oldMap = realMap;
+    realMap = map;
+
+    return oldMap;
+  }
+
+  // API
+
+
+public slots:
+  // API Slots
+
+
+private:
+  inline void deleteMap( void )
+  {
+    if(realMap)
+      delete realMap;
+
+    realMap = NULL;
+  }
 };
 
 #endif // ENVIRONMENT_H

@@ -2,212 +2,199 @@
 
 Map::Map()
 {
-  levelCount = 0;
+  width = height = levels = 0;
+  cubes = NULL;
+  error = false;
+}
+
+
+Map::Map( int l, int w, int h )
+{
+  createMap(l, w, h);
 }
 
 Map::~Map()
 {
-  if(levels)
-  {
-    delete[] levels;
-    levels = NULL;
-  }
+  deleteMap();
 }
 
-bool Map::loadLevels( QString fileName )
+Map Map::operator= (Map m)
 {
-  QFile file(fileName);
-  QStringList list;
-  QString line;
-  int count = 0;
+  deleteMap();
+  createMap(m.levels, m.width, m.height);
 
-  if(!file.open(QFile::ReadOnly))
+  for( int i = 0; i < levels; i++ )
+    for( int j = 0; j < height; j++ )
+      for( int k = 0; k < width; k++ )
+      {
+        cubes[i][j][k].setInfection(m.cubes[i][j][k].getInfection());
+        cubes[i][j][k].setTransparent(m.cubes[i][j][k].isTransparent());
+      }
+
+  return *this;
+}
+
+bool Map::loadLevelMask( int l, bool** flags )
+{
+  if(l < 0 || l > levels)
     return false;
 
-  while(!(line = QString("").append(file.readLine())).isEmpty())
-  {
-    count++;
-    line.remove('\n');
-    list.append(line);
-  }
-
-  levels = new Level[count];
-  for( int i = 0; i < count; i++ )
-    if(!levels->loadLevel(list.at(i)))
-      return false;
-
-  levelCount = count;
+  for( int i = 0; i < height; i++ )
+    for( int j = 0; j < width; j++ )
+      cubes[l][i][j].setTransparent(flags[i][j]);
 
   return true;
 }
 
-
-//  Looks like shit, DON`T YOU THINK SO?!
-QList<Cube*> Map::getAround( int level, int x, int y )
+Map* Map::getSubMap( int x, int y, int z, int rad )
 {
-   QList<Cube*> list;
-
-  if(level > levelCount || level < 0)
-    return list;
-
-  Level* current = &levels[level];
-  int w = current->getWidth(),
-      h = current->getHeight();
-
-  if(x < 0 || x >= w || y < 0 || y >= h)
-    return list;
-
-  // LIST
-
-  // UP UP UP   0  1  2        NW N NE
-  // UP UP UP   3  4  5        W     E
-  // UP UP UP   6  7  8        SW S SE
-
-  // CU CU CU   9  10 11       NW N NE
-  // CU CU CU   12 13 14       W     E
-  // CU CU CU   15 16 17       SW S SE
-
-  // DN DN DN   18 19 20       NW N NE
-  // DN DN DN   21 22 23       W     E
-  // DN DN DN   24 25 26       SW S SE
-
-  // try to see around and get something
-  bool west, east, north, south, up, down;
-  west = x;
-  east = (w - 1) - x;
-  north = y;
-  south = (h - 1) - y;
-  up = level;
-  down = (levelCount - 1) - level;
-
-  int i,j,k;
-  for( i=level-1; level+1; i++ )
-      for( j=y-1; y+1; j++ )
-          for( k=x-1; x+1; k++ )
-          {
-              list.append(getCube(i,j,k));
-          }
-
-  list.replace(14, NULL); // pin the object, who get a view
-
-  if (!west)
-  {
-      list.replace(0, NULL);
-      list.replace(3, NULL);
-      list.replace(6, NULL);
-      list.replace(9, NULL);
-      list.replace(12, NULL);
-      list.replace(15, NULL);
-      list.replace(18, NULL);
-      list.replace(21, NULL);
-      list.replace(24, NULL);
-  }
-  if(!east)
-  {
-      list.replace(2, NULL);
-      list.replace(4, NULL);
-      list.replace(8, NULL);
-      list.replace(11, NULL);
-      list.replace(14, NULL);
-      list.replace(17, NULL);
-      list.replace(20, NULL);
-      list.replace(23, NULL);
-      list.replace(26, NULL);
-      // no any cubes at the eastt
-  }
-  if(!north)
-  {
-      list.replace(0, NULL);
-      list.replace(1, NULL);
-      list.replace(2, NULL);
-      list.replace(9, NULL);
-      list.replace(10, NULL);
-      list.replace(11, NULL);
-      list.replace(18, NULL);
-      list.replace(19, NULL);
-      list.replace(20, NULL);
-      // no any cubes at the north
-  }
-  if(!south)
-  {
-      list.replace(6, NULL);
-      list.replace(7, NULL);
-      list.replace(8, NULL);
-      list.replace(15, NULL);
-      list.replace(16, NULL);
-      list.replace(17, NULL);
-      list.replace(24, NULL);
-      list.replace(25, NULL);
-      list.replace(26, NULL);
-      // no any cubes at the south
-  }
-  if(!up)
-  {
-      list.replace(0, NULL);
-      list.replace(1, NULL);
-      list.replace(2, NULL);
-      list.replace(3, NULL);
-      list.replace(4, NULL);
-      list.replace(5, NULL);
-      list.replace(6, NULL);
-      list.replace(7, NULL);
-      list.replace(8, NULL);
-      // no any cubes at the up
-  }
-  if(!down)
-  {
-      list.replace(18, NULL);
-      list.replace(19, NULL);
-      list.replace(20, NULL);
-      list.replace(21, NULL);
-      list.replace(22, NULL);
-      list.replace(23, NULL);
-      list.replace(24, NULL);
-      list.replace(25, NULL);
-      list.replace(26, NULL);
-      //no cubes down
-  }
-
-  for ( i=list.length(); i>=0; i-- )
-              if(list.at(i)==NULL) list.removeAt(i);
-
-  return list;
-}
-
-Cube* Map::getCube(int level, int x, int y)
-{
-  if(level > levelCount || level < 0)
+  int coord[6];
+  if(!getSubMapCoord(x,y,z,rad,coord))
     return NULL;
 
-  Level* current = &levels[level];
-  int w = current->getWidth(),
-      h = current->getHeight();
+  // Set transparent and infection in new map
+  Map *map = new Map(coord[5] - coord[4] + 1,
+                                   coord[3] - coord[2] + 1,
+                                   coord[1] - coord[0] + 1);
 
-  if(x < 0 || x > w || y < 0 || y > h)
-    return NULL;
+  for( int i = coord[4]; i < coord[5]; i++ )
+    for( int j = coord[2]; j < coord[3]; j++ )
+      for( int k = coord[0]; k < coord[1]; k++ )
+      {
+        map->cubes[i-coord[4]][j-coord[2]][k-coord[0]].setTransparent(
+                                            cubes[i][j][k].isTransparent());
+        map->cubes[i-coord[4]][j-coord[2]][k-coord[0]].setInfection(
+                                            cubes[i][j][k].getInfection());
+      }
 
-  return current->getCube(x, y);
+  return map;
 }
 
-bool Map::getCoord( Cube* cube, int* x, int* y )
+bool Map::appendSubMap( Map& app_map,
+                               int x, int y, int z, int rad )
 {
-  int tx, ty;
+  int coord[6];
+  if(!getSubMapCoord(x,y,z,rad,coord))
+    return false;
 
-  for( int i = 0; i < levelCount; i++ )
-    if(levels[i].getCoord(cube, &tx, &ty))
+  for( int i = 0; i < app_map.levels; i++ )
+    for( int j = 0; j < app_map.height; j++ )
+      for( int k = 0; k < app_map.width; k++ )
+      {
+        cubes[i+coord[4]][j+coord[2]][k+coord[0]].setTransparent(
+                                       app_map.cubes[i][j][k].isTransparent());
+        cubes[i+coord[4]][j+coord[2]][k+coord[0]].setInfection(
+                                       app_map.cubes[i][j][k].getInfection());
+      }
+
+  return true;
+}
+
+bool Map::createMap( int l, int w, int h )
+{
+  width = w;
+  height = h;
+  levels = l;
+  error = false;
+
+  cubes = new Cube**[levels];
+  if(!cubes)
+  {
+    error = true;
+    return !error;
+  }
+
+  for( int i = 0; i < levels; i++ )
+  {
+    cubes[i] = new Cube*[height];
+    if(!cubes[i])
     {
-      *x = tx;
-      *y = ty;
-      return true;
+      error = true;
+      return !error;
     }
 
-  return false;
+    for( int j = 0; j < height; j++ )
+    {
+      cubes[i][j] = new Cube[width];
+      if(!cubes[i][j])
+      {
+        error = true;
+        return !error;
+      }
+
+      for( int k = 0; k < width; k++ )
+      {
+        cubes[i][j][k].setInfection(0);
+        cubes[i][j][k].setTransparent(true);
+      }
+    }
+  }
+
+  return !error;
 }
 
-Map Map::operator =( Map &m ) {
-    levelCount = m.levelCount;
-    levels = new Level[levelCount];
-    for (int i = 0; i<levelCount; i++)
-        levels[i] = m.levels[i];
-    return *this;
+void Map::deleteMap()
+{
+  if(cubes == NULL)
+    return;
+
+  for( int i = 0; i < levels; i++ )
+  {
+    for( int j = 0; j < height; j++ )
+    {
+      if(cubes[i][j])
+        delete[] cubes[i][j];
+    }
+    if(cubes[i])
+      delete[] cubes[i];
+  }
+
+  delete[] cubes;
+  cubes = NULL;
+}
+
+bool Map::getSubMapCoord( int x, int y, int z, int rad, int* coord)
+{
+  if(!checkCubeExists(x,y,z))
+    return false;
+
+  if(rad > MAX_VIEW_RADIUS)
+    rad = MAX_VIEW_RADIUS;
+
+
+  // Get distanse in each direction
+  int dir_nord,           //
+      dir_south,          //  w-1  w+1
+      dir_west,           //    w n e   h-1
+      dir_east,           //      s     h+1
+      dir_up,             //  u l-1
+      dir_down;           //  d l+1
+
+  dir_nord = y - rad >= 0 ? rad : y;
+  dir_south = y + rad <= height - 1 ? rad : (height - 1) - y;
+
+  dir_west = x - rad >= 0 ? rad : x;
+  dir_east = x + rad <= width - 1 ? rad : (width - 1) - x;
+
+  dir_up = z - rad >= 0 ? rad : z;
+  dir_down = z + rad <= levels - 1 ? rad : (levels - 1) - z;
+
+  // Get size of new Map
+  int w, h, l;
+
+  w = dir_east + 1 + dir_west;
+  h = dir_south + 1 + dir_nord;
+  l = dir_down + 1 + dir_up;
+
+  // Get 2 charactristic points of Map
+  *coord = x - dir_west;
+  *(coord + 1) = x + dir_east;
+
+  *(coord + 2) = y - dir_nord;
+  *(coord + 3) = y + dir_south;
+
+  *(coord + 4) = z - dir_up;
+  *(coord + 5) = z + dir_down;
+
+  return true;
 }
