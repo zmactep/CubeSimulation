@@ -1,8 +1,3 @@
-//!  Cube class.
-/*!
-  Trivial building block of the map.
-*/
-
 #ifndef CUBE_H
 #define CUBE_H
 
@@ -14,6 +9,10 @@
 */
 #define MAX_INFECTION 10
 
+//!  Cube class.
+/*!
+  Trivial building block of the map.
+*/
 class Cube
 {
 private:

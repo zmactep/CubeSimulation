@@ -54,8 +54,8 @@ Map* Map::getSubMap( int x, int y, int z, int rad )
 
   // Set transparent and infection in new map
   Map *map = new Map(coord[5] - coord[4] + 1,
-                                   coord[3] - coord[2] + 1,
-                                   coord[1] - coord[0] + 1);
+                     coord[3] - coord[2] + 1,
+                     coord[1] - coord[0] + 1);
 
   for( int i = coord[4]; i < coord[5]; i++ )
     for( int j = coord[2]; j < coord[3]; j++ )

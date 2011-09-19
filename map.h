@@ -1,9 +1,3 @@
-//!  Map class.
-/*!
-  The map of the Simulation. May be real and subjective.
-  Has lots of methods towork with it and syncronise maps.
-*/
-
 #ifndef MAP_H
 #define MAP_H
 
@@ -27,6 +21,11 @@
 */
 #define MAX_VIEW_RADIUS 5
 
+//!  Map class.
+/*!
+  The map of the Simulation. May be real and subjective.
+  Has lots of methods towork with it and syncronise maps.
+*/
 class Map
 {
 private:
@@ -54,7 +53,7 @@ public:
   //!  Default constructor.
   /*!
     Creates empty map.
-    \sa Map(int, int, int), ~Map() and operator =()
+    \sa Map(int, int, int), operator =()
   */
   Map();
 
@@ -65,14 +64,14 @@ public:
     \param w an integer width of each level
     \param h an integer height of each level
     Sets up error flag if something wrong with memory.
-    \sa Map(), ~Map(), createMap() and operator =()
+    \sa Map(), createMap() and operator =()
   */
   Map( int, int, int );
 
   //! Destructor
   /*!
     Deletes all used memory when the object`s live ends.
-    \sa Map(), Map(int, int, int), deleteMap() and operator =()
+    \sa deleteMap()
   */
   ~Map();
 
@@ -96,9 +95,9 @@ public:
   //! Get submap method.
   /*!
     Gets submap with the given radius around the given reference point.
-    \param l an integer level number of reference point
-    \param x an integer width-coordinate of reference point
-    \param y an integer height-coordinate of reference point
+    \param x an integer x-coordinate of reference Cube
+    \param y an integer y-coordinate of reference Cube
+    \param z an integer z-coordinate of reference Cube
     \param rad an integer radius
     \return pointer to submap
     \sa appendSubMap()
@@ -109,9 +108,9 @@ public:
   /*!
     Appends submap to current map by given reference point and radius around it.
     \param app_map a submap to append
-    \param l an integer level number of reference point
-    \param x an integer width-coordinate of reference point
-    \param y an integer height-coordinate of reference point
+    \param x an integer x-coordinate of reference Cube
+    \param y an integer y-coordinate of reference Cube
+    \param z an integer z-coordinate of reference Cube
     \param rad an integer radius
     \return true if there were not any errors and
             false if somesing wrong had happend
