@@ -55,8 +55,9 @@ public:
     \return pointer to the new Map
     \sa Environment(), Environment(Map *map) and changeMap()
   */
-  inline Map* setMap( Map* map ) : realMap(map)
+  inline Map* setMap( Map* map )
   {
+    realMap = map;
     return realMap;
   }
 
@@ -76,10 +77,6 @@ public:
   }
 
   // API
-
-
-public slots:
-  // API Slots
 
 
 private:

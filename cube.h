@@ -5,20 +5,20 @@
 
 //! Maximum infection.
 /*!
-  Maximum possible infection of one cube.
+  Maximum possible infection of one Cube.
 */
 #define MAX_INFECTION 10
 
 //!  Cube class.
 /*!
-  Trivial building block of the map.
+  Trivial building block of the Map.
 */
 class Cube
 {
 private:
   //! Infection value.
   /*!
-    Current infection value of this cube.
+    Current infection value of this Cube.
   */
   int infection;
 
