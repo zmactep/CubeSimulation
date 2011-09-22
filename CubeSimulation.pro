@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui opengl
 
 TARGET = CubeSimulation
 TEMPLATE = app
@@ -13,22 +13,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
 					  cubesimulationwidget.cpp \
 					  map.cpp \
-    environment.cpp
+    environment.cpp \
+    cubesimulationview.cpp
 
 HEADERS  += cubesimulationwidget.h \
 					   cube.h \
                        map.h \
-    environment.h
+    environment.h \
+    cubesimulationview.h
 
 OTHER_FILES +=
-
-
-
-
-
-
-
-
-
-
-

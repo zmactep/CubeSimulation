@@ -7,8 +7,9 @@ int main(int argc, char *argv[])
 {
   QApplication a(argc, argv);
   CubeSimulationWidget w;
+  w.resize(640, 480);
   w.show();
-
+/*
   Map map(12,12,12);
   qDebug() << map.getHeight() <<
               " " <<
@@ -26,6 +27,6 @@ int main(int argc, char *argv[])
               map2->getLevels();
 
   delete map2;
-
+*/
   return a.exec();
 }
