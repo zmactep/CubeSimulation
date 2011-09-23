@@ -8,13 +8,6 @@
 #define max(x,y) (x) > (y) ? (x) : (y)
 #define min(x,y) (x) < (y) ? (x) : (y)
 
-#define DIRECTION_NORD  0
-#define DIRECTION_SOUTH 1
-#define DIRECTION_WEST  2
-#define DIRECTION_EAST  3
-#define DIRECTION_UP    4
-#define DIRECTION_DOWN  5
-
 //!  Maximum view radius.
 /*!
   The maximum distanse from the look point to generate new map.
@@ -23,7 +16,7 @@
 
 //!  Map class.
 /*!
-  The map of the Simulation. May be real and subjective.
+  The Map of the Simulation. May be real and subjective.
   Has lots of methods towork with it and syncronise maps.
 */
 class Map
@@ -60,7 +53,7 @@ public:
   //! Dimensions-based contructor.
   /*!
     Creates the map with given dimensions.
-    \param l an integer number of map`s levels
+    \param l an integer number of Map`s levels
     \param w an integer width of each level
     \param h an integer height of each level
     Sets up error flag if something wrong with memory.
@@ -81,14 +74,22 @@ public:
     \return assigned Map copy
     \sa Map(), Map(int, int, int) and ~Map()
   */
-  Map operator= (Map);
+  Map operator= ( Map );
+
+  //! Map copy method.
+  /*!
+    \param m pointer to the Map to copy
+    \return pointer to the current Map
+    \sa operator =()
+  */
+  Map *copyOf( Map* );
 
   //! Load one level method.
   /*!
     \param l an integer number of loading level
     \param flags 2D array of transparent flags, must be height*width size
     \return true if there were not any errors and
-            false if somesing wrong had happend
+            false if something wrong had happend
   */
   bool loadLevelMask( int, bool** );
 
@@ -106,14 +107,14 @@ public:
 
   //! Append submap method.
   /*!
-    Appends submap to current map by given reference point and radius around it.
+    Appends submap to current Map by given reference point and radius around it.
     \param app_map a submap to append
     \param x an integer x-coordinate of reference Cube
     \param y an integer y-coordinate of reference Cube
     \param z an integer z-coordinate of reference Cube
     \param rad an integer radius
     \return true if there were not any errors and
-            false if somesing wrong had happend
+            false if something wrong had happend
     \sa getSubMap()
   */
   bool appendSubMap( Map&, int, int, int, int );
@@ -185,7 +186,7 @@ public:
     if(!checkCubeExists(x,y,z))
       return false;
 
-    return cubes[z][y][x].isTransparent();
+    return cubes[y][z][x].isTransparent();
   }
 
   //! Get Cube infection value method.
@@ -200,7 +201,7 @@ public:
     if(!checkCubeExists(x,y,z))
       return -1;
 
-    return cubes[z][y][x].getInfection();
+    return cubes[y][z][x].getInfection();
   }
 
   //! Cube infection increment method.
@@ -215,7 +216,7 @@ public:
     if(!checkCubeExists(x,y,z))
       return -1;
 
-    return cubes[z][y][x].incInfection();
+    return cubes[y][z][x].incInfection();
   }
 
   //! Cube infection decrement value method.
@@ -230,7 +231,7 @@ public:
     if(!checkCubeExists(x,y,z))
       return -1;
 
-    return cubes[z][y][x].decInfection();
+    return cubes[y][z][x].decInfection();
   }
 
   //! Get Cube pointer method.
@@ -245,7 +246,7 @@ public:
     if(!checkCubeExists(x,y,z))
       return NULL;
 
-    return &cubes[z][y][x];
+    return &cubes[y][z][x];
   }
 
 private:
@@ -277,7 +278,7 @@ private:
     \param rad an integer radius
     \param coord an integer array to put values to, the length must be 6
     \return true if there were not any errors and
-            false if somesing wrong had happend
+            false if something wrong had happend
     \sa getSubMap(), appendSubMap()
   */
   bool getSubMapCoord( int, int, int, int, int* );
@@ -293,9 +294,9 @@ private:
   */
   inline bool checkCubeExists( int x, int y, int z )
   {
-    if(z < 0 || z > levels ||
-       y < 0 || y > height ||
-       x < 0 || x > width)
+    if(y < 0 || y >= levels ||
+       z < 0 || z >= height ||
+       x < 0 || x >= width)
       return false;
 
     return true;

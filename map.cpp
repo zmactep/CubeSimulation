@@ -34,9 +34,29 @@ Map Map::operator= (Map m)
   return *this;
 }
 
+Map *Map::copyOf( Map* m )
+{
+  deleteMap();
+
+  if(!m)
+    return NULL;
+
+  createMap(m->levels, m->width, m->height);
+
+  for( int i = 0; i < levels; i++ )
+    for( int j = 0; j < height; j++ )
+      for( int k = 0; k < width; k++ )
+      {
+        cubes[i][j][k].setInfection(m->cubes[i][j][k].getInfection());
+        cubes[i][j][k].setTransparent(m->cubes[i][j][k].isTransparent());
+      }
+
+  return this;
+}
+
 bool Map::loadLevelMask( int l, bool** flags )
 {
-  if(l < 0 || l > levels)
+  if(l < 0 || l >= levels)
     return false;
 
   for( int i = 0; i < height; i++ )
@@ -71,7 +91,7 @@ Map* Map::getSubMap( int x, int y, int z, int rad )
 }
 
 bool Map::appendSubMap( Map& app_map,
-                               int x, int y, int z, int rad )
+                        int x, int y, int z, int rad )
 {
   int coord[6];
   if(!getSubMapCoord(x,y,z,rad,coord))
@@ -170,14 +190,14 @@ bool Map::getSubMapCoord( int x, int y, int z, int rad, int* coord)
       dir_up,             //  u l-1
       dir_down;           //  d l+1
 
-  dir_nord = y - rad >= 0 ? rad : y;
-  dir_south = y + rad <= height - 1 ? rad : (height - 1) - y;
+  dir_nord = z - rad >= 0 ? rad : z;
+  dir_south = z + rad <= height - 1 ? rad : (height - 1) - z;
 
   dir_west = x - rad >= 0 ? rad : x;
   dir_east = x + rad <= width - 1 ? rad : (width - 1) - x;
 
-  dir_up = z - rad >= 0 ? rad : z;
-  dir_down = z + rad <= levels - 1 ? rad : (levels - 1) - z;
+  dir_up = y - rad >= 0 ? rad : y;
+  dir_down = y + rad <= levels - 1 ? rad : (levels - 1) - y;
 
   // Get size of new Map
   int w, h, l;
@@ -190,11 +210,11 @@ bool Map::getSubMapCoord( int x, int y, int z, int rad, int* coord)
   *coord = x - dir_west;
   *(coord + 1) = x + dir_east;
 
-  *(coord + 2) = y - dir_nord;
-  *(coord + 3) = y + dir_south;
+  *(coord + 2) = z - dir_nord;
+  *(coord + 3) = z + dir_south;
 
-  *(coord + 4) = z - dir_up;
-  *(coord + 5) = z + dir_down;
+  *(coord + 4) = y - dir_up;
+  *(coord + 5) = y + dir_down;
 
   return true;
 }
