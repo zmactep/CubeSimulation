@@ -5,103 +5,34 @@ Environment::Environment( Map* map )
 {
   realMap = map;
 
-  startFlag = true;
+  startFlag = false;
 
-  green = NULL;
-  blue = NULL;
-
-/*
-  green = new AgentManager;
-  blue = new AgentManager;
-
-  green->setSubjMap(*realMap);
-  blue->setSubjMap(*realMap);
-*/
+//  connect(this, SIGNAL(stateChanged()), this, SLOT(slot_nextStep()));
+  start();
 }
 
 Environment::~Environment()
 {
   deleteMap();
-
-  if(green)
-    delete green;
-  green = NULL;
-
-  if(blue)
-    delete blue;
-  blue = NULL;
 }
 
-void Environment::makeActions( void )
+void Environment::simulationStep( void )
 {
-  static bool who = true;
-  AgentManager *current;
+  static int i = 0;
+  qDebug() << "Hello world! " << i++;
+}
 
-  current = who ? green : blue;
-
-  Map *tmpMap;
-  int coord[3];
-
-  for( int c = 0; c < 2; c++)
+void Environment::run( void )
+{
+  while(1)
   {
-    if(current)
-      current->makeStrategy();
+    if(startFlag)
+      simulationStep();
 
-    for( int i = 0; i < current->getAgentsCount(); i++ )
-    {
-      if(!current->getAgentHealth(i))
-        continue;
+    emit stateChanged();
 
-      if(!current->getAgentCoord(i, coord))
-        continue;
-
-      if(iWantTo(current->getAgentPlan(i), coord))
-        current->approveLastAgentPlan(i);
-
-      tmpMap = realMap->getSubMap(coord[0], coord[1], coord[2], VIEW_RADIUS);
-      current->appendInfo(*tmpMap, coord[0], coord[1], coord[2], VIEW_RADIUS);
-
-      delete tmpMap;
-    }
-
-    current = current == green ? blue : green;
+    msleep(1000/STEPS_PER_SECOND);
   }
-
-  who = !who;
-
-  emit stateChanged();
-}
-
-// API
-bool Environment::iWantTo( unsigned char action, int* coord )
-{
-  // Agent whants to do nothing. Let it do this! :)
-  if(action == 0)
-    return true;
-
-  bool  dir_nord,           //
-        dir_south,          //  w-1  w+1
-        dir_west,           //    w n e   h-1
-        dir_east,           //      s     h+1
-        dir_up,             //  u l-1
-        dir_down;           //  d l+1
-  unsigned char act;
-
-  dir_nord  = action & DIRECTION_NORD;
-  dir_south = action & DIRECTION_SOUTH;
-  dir_west  = action & DIRECTION_WEST;
-  dir_east  = action & DIRECTION_EAST;
-  dir_up    = action & DIRECTION_UP;
-  dir_down  = action & DIRECTION_DOWN;
-
-  act = action & ACTION_MASK;
-
-  // TODO: Check action
-
-  // TODO: Make action
-
-
-  return true;
 }
 
 // SLOTS
@@ -114,5 +45,15 @@ void Environment::slot_toggleStart( void )
 {
   startFlag = !startFlag;
   if(startFlag)
-    makeActions();
+    emit stateChanged();
+}
+
+void Environment::slot_nextStep( void )
+{
+  if(startFlag)
+  {
+    simulationStep();
+
+    emit stateChanged();
+  }
 }

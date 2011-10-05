@@ -3,6 +3,9 @@
 
 #define MAX_HEALTH 100
 
+#include "cubebasic.h"
+#include "map.h"
+
 //! Agent class.
 /*!
   Agent is the citizen of the Environment. Depense on the team, it can be
@@ -11,12 +14,6 @@
 class Agent
 {
 private:
-  //! Agent`s coordinates.
-  /*!
-    The position of the Agent in real Map.
-  */
-  int x, y, z;
-
   //! Agent`s heals.
   /*!
     When the agent health is 0, it decativates.
@@ -29,15 +26,18 @@ private:
   */
   unsigned char agentPlan;
 
+  //! Agent`s CubeBasic.
+  /*!
+    A CubeBasic whitch the Agent is in.
+  */
+  CubeBasic *myCube;
+
 public:
   //! Constructor.
   /*!
-    Constructs full health Agent in the given point of the Map.
-    \param _x an integer x-coordinate of Agent`s Cube
-    \param _y an integer y-coordinate of Agent`s Cube
-    \param _z an integer z-coordinate of Agent`s Cube
+    Constructs full health Agent.
   */
-  Agent( int _x = 0, int _y = 0, int _z = 0) :x(_x), y(_y), z(_z)
+  Agent()
   {
     health = MAX_HEALTH;
     agentPlan = 0;
@@ -63,48 +63,16 @@ public:
     return agentPlan;
   }
 
-  //! Move agent method.
+  //! Make plan method.
   /*!
-    Moves Agent to the given point.
-    \param nx an integer x-coordinate of destination Cube
-    \param ny an integer y-coordinate of destination Cube
-    \param nz an integer z-coordinate of destination Cube
+    Make Agent`s plan for the next iteration.
+    \param map pointer to Map where Agent lives
+    \return an encoded plan
   */
-  inline void moveTo( int nx, int ny, int nz )
+  virtual unsigned char makePlan( Map* map )
   {
-    x = nx;
-    y = ny;
-    z = nz;
-  }
-
-  //! Get x-coord method.
-  /*!
-    Gets the x-coord of the Agent.
-    \return integer x-coordinate of Agent`s Cube
-  */
-  inline int getX( void )
-  {
-    return x;
-  }
-
-  //! Get y-coord method.
-  /*!
-    Gets the y-coord of the Agent.
-    \return integer y-coordinate of Agent`s Cube
-  */
-  inline int getY( void )
-  {
-    return y;
-  }
-
-  //! Get z-coord method.
-  /*!
-    Gets the z-coord of the Agent.
-    \return integer z-coordinate of Agent`s Cube
-  */
-  inline int getZ( void )
-  {
-    return z;
+    agentPlan = 0;
+    return 0;
   }
 
   //! Get health method.

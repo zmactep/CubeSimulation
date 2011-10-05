@@ -1,33 +1,14 @@
 #ifndef CUBE_H
 #define CUBE_H
 
-#include <stdio.h>
-
-//! Maximum infection.
-/*!
-  Maximum possible infection of one Cube.
-*/
-#define MAX_INFECTION 10
+#include "cubebasic.h"
 
 //!  Cube class.
 /*!
   Trivial building block of the Map.
 */
-class Cube
+class Cube : public CubeBasic
 {
-private:
-  //! Infection value.
-  /*!
-    Current infection value of this Cube.
-  */
-  int infection;
-
-  //! Transparent flag.
-  /*!
-    If transparent flag is true, than any Agent can stay in it.
-  */
-  bool transparent;
-
 public:
   //! Constructor.
   /*!
@@ -64,52 +45,12 @@ public:
     return infection = i;
   }
 
-  //! Infection increment method.
-  /*!
-    \return new infection value
-    \sa setInfection(), decInfection() and getInfection()
-  */
-  inline int incInfection( void )
-  {
-    return infection < MAX_INFECTION ? ++infection : infection;
-  }
-
-  //! Infection decrement method.
-  /*!
-    \return new infection value
-    \sa setInfection(), incInfection() and getInfection()
-  */
-  inline int decInfection( void )
-  {
-    return infection > 0 ? --infection : infection;
-  }
-
-  //! Get current infection value method.
-  /*!
-    \return current infection value
-    \sa setInfection(), incInfection() and decInfection()
-  */
-  inline int getInfection( void )
-  {
-    return infection;
-  }
-
-  //! Get current transparent flag value method.
-  /*!
-    \return current transparent flag value
-    \sa setTransparent()
-  */
-  inline bool isTransparent( void )
-  {
-    return transparent;
-  }
-
   //! Cube assignment method.
   /*!
-    \param c Cube to assign
-    \return assigned Cube copy
-  */
-  inline Cube operator=(Cube c)
+      \param c Cube to assign
+      \return assigned Cube copy
+    */
+  inline Cube operator=( Cube c )
   {
     transparent = c.transparent;
     infection = c.infection;

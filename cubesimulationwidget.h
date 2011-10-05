@@ -28,12 +28,19 @@ private:
   */
   Environment *env;
 
-  //! Map of simulation
+  //! Map of simulation.
   /*!
     This Map is the most real, that connects with the Environment
     and CubeSimulationView.
   */
   Map *map;
+
+
+  //! Toggle button.
+  /*!
+    This button toggles simulation.
+  */
+  QPushButton *toggleButton;
 
 public:
   //! Constructor.
@@ -48,6 +55,13 @@ public:
     Deletes all used memory when the object`s live ends.
   */
   ~CubeSimulationWidget();
+
+public slots:
+  //! Toggle buttun slot
+  /*!
+    Toggles simulation and changes text on a Toggle button.
+  */
+  void slot_toggleSimulation( void );
 
 private:
   //! Init Environment method

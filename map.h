@@ -72,7 +72,7 @@ public:
   /*!
     \param m Map to assign
     \return assigned Map copy
-    \sa Map(), Map(int, int, int) and ~Map()
+    \sa copyOf()
   */
   Map operator= ( Map );
 

@@ -13,10 +13,11 @@ CubeSimulationWidget::CubeSimulationWidget(QWidget *parent)
   connect(env, SIGNAL(stateChanged()), wgtGL, SLOT(updateGL()));
 
   QHBoxLayout *playControls = new QHBoxLayout(this);
-  QPushButton *toggleButton = new QPushButton(tr("Start"), this);
+  toggleButton = new QPushButton(tr("Start"), this);
   QPushButton *clearButtor = new QPushButton(tr("Clear"), this);
   QPushButton *exitButton = new QPushButton(tr("Exit"), this);
 
+  connect(toggleButton, SIGNAL(clicked()), this, SLOT(slot_toggleSimulation()));
   connect(exitButton, SIGNAL(clicked()), qApp, SLOT(quit()));
 
   playControls->addWidget(toggleButton);
@@ -31,6 +32,7 @@ CubeSimulationWidget::CubeSimulationWidget(QWidget *parent)
 
 CubeSimulationWidget::~CubeSimulationWidget()
 {
+  env->terminate();
   if(env)
     delete env;
   env = NULL;
@@ -40,4 +42,22 @@ void CubeSimulationWidget::initEnvironment( int l, int w, int h )
 {
   map = new Map(l,w,h);
   env = new Environment(map);
+
+  // Generate map here
+  map->getCube(0,0,0)->setTransparent(false);
+
+  map->getCube(0,1,0)->setTransparent(false);
+  map->getCube(0,1,0)->setInfection(5);
+
+  map->getCube(0,2,0)->setTransparent(false);
+  map->getCube(0,2,0)->setInfection(10);
+}
+
+void CubeSimulationWidget::slot_toggleSimulation( void )
+{
+  env->slot_toggleStart();
+  if(env->isStarted())
+    toggleButton->setText("Pause");
+  else
+    toggleButton->setText("Start");
 }

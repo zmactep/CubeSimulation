@@ -1,10 +1,11 @@
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
+#include <QDebug>
+#include <QThread>
 #include <QObject>
 #include <QTimer>
 #include "map.h"
-#include "agentmanager.h"
 
 #define DIRECTION_NORD  0x80
 #define DIRECTION_SOUTH 0x40
@@ -24,13 +25,14 @@
 // Params for agent`s simulation
 #define VIEW_RADIUS     3
 #define ONE_HIT_FORCE   20
+#define STEPS_PER_SECOND 10
 
 //!  Environment class.
 /*!
   The main Simulation class. It has the real Map and agents managers.
   Gives the agent managers API for actions in the Map.
 */
-class Environment : public QObject
+class Environment : public QThread
 {
   Q_OBJECT
 private:
@@ -39,12 +41,6 @@ private:
     The real map, that has the information of all cubes state.
   */
   Map *realMap;
-
-  //! Agent Managers.
-  /*!
-    Two teams, that are fighting in the Environment.
-  */
-  AgentManager *green, *blue;
 
   //! Live flag.
   /*!
@@ -96,21 +92,26 @@ public:
     return oldMap;
   }
 
-  //! One itertion actions method.
+  //! Get start flag method.
   /*!
-    Makes all the agents of the both teams to do something. If one team goes
-    first, than in next iteration another will.
+    \return true, if simulation started or false if not
   */
-  void makeActions( void );
+  inline bool isStarted( void )
+  {
+    return startFlag;
+  }
 
-  //! A try of Agent to do something method.
+  //! Simlation step method.
   /*!
-    \param action an action, that the Agent whants to do
-    \param coord coordinates of the Agent, that whants to do something
-    \return true if the Agent can do this, or false if it cannot
+    One step of simulation.
   */
-  bool iWantTo( unsigned char, int* );
+  void simulationStep( void );
 
+  //! Run method.
+  /*!
+    New thread working method.
+  */
+  void run( void );
 
 signals:
   //! State changed signal.
@@ -120,17 +121,23 @@ signals:
   void stateChanged( void );
 
 public slots:
-  //! Force state change slot
+  //! Force state change slot.
   /*!
     Force emits state change signal.
   */
   void slot_setStateChanged( void );
 
-  //! Toggle Start Flag slot
+  //! Toggle Start Flag slot.
   /*!
     Toggles start flag, so the simulation may be paused or resumed.
   */
   void slot_toggleStart( void );
+
+  //! Make next step slot.
+  /*!
+    One more simulation iteration.
+  */
+  void slot_nextStep( void );
 
 private:
   //!  Delete current Map method.
