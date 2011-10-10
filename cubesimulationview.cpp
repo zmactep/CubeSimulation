@@ -3,14 +3,13 @@
 CubeSimulationView::CubeSimulationView(QWidget *parent) :
   QGLWidget(parent)
 {
-  viewMap = NULL;
+  envPtr = NULL;
 
-/*
   isRotateTimer = false;
-*/
+  slot_installRotateTimer();
 }
 
-/*
+
 void CubeSimulationView::slot_installRotateTimer( void )
 {
   startTime.start();
@@ -19,7 +18,7 @@ void CubeSimulationView::slot_installRotateTimer( void )
 
   isRotateTimer = true;
 }
-*/
+
 
 void CubeSimulationView::initializeGL( void )
 {
@@ -47,27 +46,66 @@ void CubeSimulationView::resizeGL( int w, int h )
 
 void CubeSimulationView::paintGL( void )
 {
-/*
   unsigned long int sceneTime = startTime.elapsed();
-*/
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   glPushMatrix();
 
-/*
+
     if(isRotateTimer)
       glRotatef(0.1*sceneTime, 0, 1, 0);
-*/
+
 
     glScalef(1.5,1.5,1.5);
     drawMap();
+    drawTeam(0);
+    drawTeam(1);
 
   glPopMatrix();
 }
 
+void CubeSimulationView::drawTeam( int teamNum )
+{
+  Map* viewMap = envPtr->getMap();
+
+  GLUquadricObj *quadObj;
+  quadObj = gluNewQuadric();
+
+  QList<Point3D> list;
+  list = envPtr->exportAgents(teamNum);
+
+  Point3D p;
+  float x_dist,
+        y_dist,
+        z_dist;
+
+  for( int i = 0; i < list.length(); i++)
+  {
+    p = list.at(i);
+
+    glPushMatrix();
+
+      if(teamNum)
+        glColor3f(0., 1., 0.);
+      else
+        glColor3f(0., 0., 1.);
+
+      x_dist = p.x - viewMap->getWidth() / 2.0 + 0.5;
+      y_dist = p.y - viewMap->getLevels() / 2.0 + 0.5;
+      z_dist = p.z - viewMap->getHeight() / 2.0 + 0.5;
+
+      glTranslatef(x_dist*1.1, y_dist*1.1, z_dist*1.1);
+      gluSphere(quadObj, 0.4, 10, 10);
+
+    glPopMatrix();
+  }
+}
+
 void CubeSimulationView::drawMap( void )
 {
+  Map* viewMap = envPtr->getMap();
+
   if(!viewMap || viewMap->isError())
     return;
 
@@ -79,6 +117,8 @@ void CubeSimulationView::drawMap( void )
 
 void CubeSimulationView::drawCube( int x, int y, int z )
 {
+  Map* viewMap = envPtr->getMap();
+
   if(!viewMap || viewMap->isError())
     return;
 
@@ -107,10 +147,12 @@ void CubeSimulationView::drawBlendCube( float r, float g, float b, float alpha )
 
   glColor4f(r, g, b, alpha);
 
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  if(r < 0.9 && g < 0.9 && b < 0.9)
+  {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  glBegin(GL_QUADS);
+    glBegin(GL_QUADS);
     // Bottom
     glVertex3f(-0.5, -0.5, -0.5);
     glVertex3f(0.5, -0.5, -0.5);
@@ -146,9 +188,10 @@ void CubeSimulationView::drawBlendCube( float r, float g, float b, float alpha )
     glVertex3f(0.5, 0.5, -0.5);
     glVertex3f(0.5, 0.5, 0.5);
     glVertex3f(0.5, -0.5, 0.5);
-  glEnd();
+    glEnd();
 
-  glDisable(GL_BLEND);
+    glDisable(GL_BLEND);
+  }
 
   // LINES
 

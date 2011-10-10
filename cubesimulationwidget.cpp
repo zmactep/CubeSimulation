@@ -8,7 +8,7 @@ CubeSimulationWidget::CubeSimulationWidget(QWidget *parent)
   initEnvironment(5,5,5);
 
   wgtGL = new CubeSimulationView(this);
-  wgtGL->loadMap(map);
+  wgtGL->loadEnvironment(env);
 
   connect(env, SIGNAL(stateChanged()), wgtGL, SLOT(updateGL()));
 
@@ -40,8 +40,10 @@ CubeSimulationWidget::~CubeSimulationWidget()
 
 void CubeSimulationWidget::initEnvironment( int l, int w, int h )
 {
+  AgentManagerFactory facts[2];
+
   map = new Map(l,w,h);
-  env = new Environment(map);
+  env = new Environment(map, facts);
 
   // Generate map here
   map->getCube(0,0,0)->setTransparent(false);

@@ -5,6 +5,7 @@
 
 #include "map.h"
 #include "environment.h"
+
 #include "cubesimulationview.h"
 
 //!  CubeSimulationWidget class.

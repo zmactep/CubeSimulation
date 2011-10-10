@@ -3,6 +3,7 @@
 
 #include <QtOpenGL>
 #include "map.h"
+#include "environment.h"
 
 //!  CubeSimulationView class.
 /*!
@@ -12,18 +13,17 @@ class CubeSimulationView : public QGLWidget
 {
   Q_OBJECT
 private:
-  //!  Simulation Map.
+  //!  Simulation Environment.
   /*!
-    The real Map of the Simulation.
+    The Environment of the Simulation.
   */
-  Map *viewMap;
+  Environment *envPtr;
 
 // Some test stuff
-/*
   QTimer timer;
   QTime startTime;
   bool isRotateTimer;
-*/
+
 
 public:
   //! Constructor.
@@ -34,23 +34,22 @@ public:
   explicit CubeSimulationView(QWidget *parent = 0);
 
 
-  //! Load Map method.
+  //! Load Environment method.
   /*!
-    Loads a Map to show.
-    \param map a Map to show
+    Loads a Enrinment to show.
+    \param env an Environment to show
   */
-  inline void loadMap( Map *map )
+  inline void loadEnvironment( Environment *env )
   {
-    viewMap = map;
+    envPtr = env;
   }
 
 signals:
 
 // Another test stuff
-/*
 public slots:
   void slot_installRotateTimer();
-*/
+
 
 protected:
   //! Init start OpenGL params method.
@@ -74,6 +73,12 @@ protected:
   void paintGL( void );
 
 private:
+  //! Draw one team of Agents.
+  /*!
+    \param teamNum number of a team to draw
+  */
+  void drawTeam( int teamNum );
+
   //! Draw view Map method.
   /*!
     Draws all the cubes of the view Map. Cube color depends on

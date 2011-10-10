@@ -90,24 +90,69 @@ Map* Map::getSubMap( int x, int y, int z, int rad )
   return map;
 }
 
-bool Map::appendSubMap( Map& app_map,
+bool Map::appendSubMap( Map* app_map,
                         int x, int y, int z, int rad )
 {
   int coord[6];
   if(!getSubMapCoord(x,y,z,rad,coord))
     return false;
 
-  for( int i = 0; i < app_map.levels; i++ )
-    for( int j = 0; j < app_map.height; j++ )
-      for( int k = 0; k < app_map.width; k++ )
+  for( int i = 0; i < app_map->levels; i++ )
+    for( int j = 0; j < app_map->height; j++ )
+      for( int k = 0; k < app_map->width; k++ )
       {
         cubes[i+coord[4]][j+coord[2]][k+coord[0]].setTransparent(
-                                       app_map.cubes[i][j][k].isTransparent());
+                                       app_map->cubes[i][j][k].isTransparent());
         cubes[i+coord[4]][j+coord[2]][k+coord[0]].setInfection(
-                                       app_map.cubes[i][j][k].getInfection());
+                                       app_map->cubes[i][j][k].getInfection());
       }
 
   return true;
+}
+
+Cube* Map::getSameCubeFrom( Map* map, CubeBasic* cube )
+{
+  if(levels != map->levels &&
+     width  != map->width &&
+     height != map->height)
+    return NULL;
+
+  int coord[3];
+
+  if(!map->getCubeCoord(cube, coord))
+    return NULL;
+
+  return getCube(coord[0], coord[1], coord[2]);
+}
+
+bool Map::getCubeCoord( CubeBasic* cube, int *coord )
+{
+  for( int i = 0; i < levels; i++ )
+    for( int j = 0; j < height; j++ )
+      for( int k = 0; k < width; k++ )
+        if(cube == &cubes[i][j][k])
+        {
+          *(coord) = k;
+          *(coord + 1) = i;
+          *(coord + 2) = j;
+
+          return true;
+        }
+
+  return false;
+}
+
+int Map::getTransparentCubesCount( void )
+{
+  int num = 0;
+
+  for( int i = 0; i < levels; i++ )
+    for( int j = 0; j < height; j++ )
+      for( int k = 0; k < width; k++ )
+        if(cubes[i][j][k].isTransparent())
+          num++;
+
+  return num;
 }
 
 bool Map::createMap( int l, int w, int h )

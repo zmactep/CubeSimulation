@@ -3,24 +3,15 @@
 
 #include <QDebug>
 #include <QThread>
-#include <QObject>
 #include <QTimer>
+
+#include <QList>
+#include <QMap>
+
 #include "map.h"
 
-#define DIRECTION_NORD  0x80
-#define DIRECTION_SOUTH 0x40
-#define DIRECTION_WEST  0x20
-#define DIRECTION_EAST  0x10
-#define DIRECTION_UP    0x08
-#define DIRECTION_DOWN  0x04
-
-#define ACTION_MASK     0x03
-
-#define ACTION_KILL     0x03
-#define ACTION_INFECT   0x02
-#define ACTION_HEAL     0x01
-#define ACTION_GO       0x00
-
+#include "agentmanager.h"
+#include "agentmanagerfactory.h"
 
 // Params for agent`s simulation
 #define VIEW_RADIUS     3
@@ -48,14 +39,21 @@ private:
   */
   bool startFlag;
 
+  //! Teams.
+  /*!
+    AgentManagers that play our game
+  */
+  AgentManager** teams;
+
 public:
   //!  Map setup constructor.
   /*!
     Creates Environment with given Map. Creates two teams.
     \param map a Map that will be used by Environment
+    \param facts array of factories to create teams
     \sa Environment(), setMap() and changeMap()
   */
-  Environment( Map* map = NULL );
+  Environment( Map* map = NULL, AgentManagerFactory *facts = NULL );
 
   //!  Destructor.
   /*!
@@ -74,6 +72,17 @@ public:
   inline Map* setMap( Map* map )
   {
     realMap = map;
+    return realMap;
+  }
+
+  //! Get Map method.
+  /*!
+    Get Environment`s Map.
+    \return pointer to theMap
+    \sa Environment(), Environment(Map *map) and changeMap()
+  */
+  inline Map* getMap( void )
+  {
     return realMap;
   }
 
@@ -106,6 +115,13 @@ public:
     One step of simulation.
   */
   void simulationStep( void );
+
+  //! Export agents method.
+  /*!
+    \param teamNum the number of team to get Agents from
+    \return list of all Agents
+  */
+  QList<Point3D> exportAgents( int teamNum );
 
   //! Run method.
   /*!
@@ -152,6 +168,13 @@ private:
 
     realMap = NULL;
   }
+
+  //! Get enemy agents method.
+  /*!
+    \param teamNumber number of current team
+    \return list of enemys around current team
+  */
+  QList<CubeBasic*> getEnemyAgents( int teamNumber );
 };
 
 #endif // ENVIRONMENT_H

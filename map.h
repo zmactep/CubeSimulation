@@ -8,6 +8,11 @@
 #define max(x,y) (x) > (y) ? (x) : (y)
 #define min(x,y) (x) < (y) ? (x) : (y)
 
+struct Point3D
+{
+  int x, y, z;
+};
+
 //!  Maximum view radius.
 /*!
   The maximum distanse from the look point to generate new map.
@@ -108,7 +113,7 @@ public:
   //! Append submap method.
   /*!
     Appends submap to current Map by given reference point and radius around it.
-    \param app_map a submap to append
+    \param app_map a pointer to submap to append
     \param x an integer x-coordinate of reference Cube
     \param y an integer y-coordinate of reference Cube
     \param z an integer z-coordinate of reference Cube
@@ -117,7 +122,17 @@ public:
             false if something wrong had happend
     \sa getSubMap()
   */
-  bool appendSubMap( Map&, int, int, int, int );
+  bool appendSubMap( Map*, int, int, int, int );
+
+
+  //! Get same Cube method.
+  /*!
+    Returns the Cube in same position as in got Map.
+    \param map a Map with got Cube
+    \param cube Cube in the same position
+    \return Cube or NULL if there are no same Cubes
+  */
+  Cube* getSameCubeFrom( Map*, CubeBasic* );
 
   //! Check error method.
   /*!
@@ -240,6 +255,7 @@ public:
     \param y an integer y-coordinate of Cube
     \param z an integer z-coordinate of Cube
     \return pointer to the given Cube
+    \sa getCubeCoord()
   */
   inline Cube* getCube( int x, int y, int z )
   {
@@ -248,6 +264,22 @@ public:
 
     return &cubes[y][z][x];
   }
+
+  //! Get Cube coordinates method.
+  /*!
+    \param cube Cube which coordiantes to find
+    \param coord an integer array to put values to, the length must be 3
+    \return true if there were not any errors and
+            false if something wrong had happend
+    \sa getCube()
+  */
+  bool getCubeCoord( CubeBasic*, int* );
+
+  //! Get transparent Cube count method.
+  /*!
+    \return number of transparent Cubes in the Map
+  */
+  int getTransparentCubesCount( void );
 
 private:
   //! Create map method.
