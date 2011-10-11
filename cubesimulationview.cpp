@@ -5,8 +5,12 @@ CubeSimulationView::CubeSimulationView(QWidget *parent) :
 {
   envPtr = NULL;
 
+  ry = 0;
+
+  isRotateMouse = false;
   isRotateTimer = false;
-  slot_installRotateTimer();
+  //slot_installRotateTimer();
+  slot_installRotateMouse();
 }
 
 
@@ -17,6 +21,11 @@ void CubeSimulationView::slot_installRotateTimer( void )
   timer.start(40);
 
   isRotateTimer = true;
+}
+
+void CubeSimulationView::slot_installRotateMouse( void )
+{
+  isRotateMouse = true;
 }
 
 
@@ -56,6 +65,8 @@ void CubeSimulationView::paintGL( void )
     if(isRotateTimer)
       glRotatef(0.1*sceneTime, 0, 1, 0);
 
+    if(isRotateMouse)
+      glRotatef(ry, 0, 1, 0);
 
     glScalef(1.5,1.5,1.5);
     drawMap();
@@ -195,7 +206,7 @@ void CubeSimulationView::drawBlendCube( float r, float g, float b, float alpha )
 
   // LINES
 
-  glColor3f(0,0,0);
+  glColor3f(0.1,0.1,0.1);
 
   glBegin(GL_LINES);
     glVertex3f(-0.51, -0.51, -0.51);

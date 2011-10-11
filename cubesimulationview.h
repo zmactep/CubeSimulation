@@ -24,6 +24,9 @@ private:
   QTime startTime;
   bool isRotateTimer;
 
+// Some rotate stuff
+  bool isRotateMouse;
+  int ry;
 
 public:
   //! Constructor.
@@ -44,12 +47,21 @@ public:
     envPtr = env;
   }
 
+  //! Change rotatiton.
+  /*!
+    \param iry addition to rotation rate
+  */
+  inline void changeRY( int iry )
+  {
+    ry += iry;
+  }
+
 signals:
 
 // Another test stuff
 public slots:
-  void slot_installRotateTimer();
-
+  void slot_installRotateTimer( void );
+  void slot_installRotateMouse( void );
 
 protected:
   //! Init start OpenGL params method.

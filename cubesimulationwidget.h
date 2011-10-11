@@ -57,6 +57,18 @@ public:
   */
   ~CubeSimulationWidget();
 
+protected:
+  //! Key press listener.
+  void keyPressEvent( QKeyEvent *event )
+  {
+    if(event->key() == Qt::Key_D)
+      wgtGL->changeRY(5);
+    else if(event->key() == Qt::Key_A)
+      wgtGL->changeRY(-5);
+
+    qDebug() << "Key pressed!";
+  }
+
 public slots:
   //! Toggle buttun slot
   /*!
