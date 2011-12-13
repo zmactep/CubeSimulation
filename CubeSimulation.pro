@@ -31,9 +31,7 @@ HEADERS  += cubesimulationwidget.h \
 
 OTHER_FILES +=
 
-
-
-
+LIBS += ".\libfloatfann.a"
 
 
 
