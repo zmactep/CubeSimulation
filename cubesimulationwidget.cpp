@@ -52,7 +52,7 @@ void CubeSimulationWidget::initEnvironment( int l, int w, int h )
   map->getCube(0,1,0)->setInfection(5);
 
   map->getCube(0,2,0)->setTransparent(false);
-  map->getCube(0,2,0)->setInfection(10);
+  map->getCube(0,2,0)->setInfection(1);
 }
 
 void CubeSimulationWidget::slot_toggleSimulation( void )

@@ -15,37 +15,21 @@ SOURCES += main.cpp\
            map.cpp \
            environment.cpp \
            cubesimulationview.cpp \
-    agentmanager.cpp \
-    agent.cpp
+           agentmanager.cpp \
+           agent.cpp
 
 HEADERS  += cubesimulationwidget.h \
             cube.h \
             map.h \
             environment.h \
             cubesimulationview.h \
-    agent.h \
-    cubebasic.h \
-    agentmanager.h \
-    agentfactory.h \
-    agentmanagerfactory.h
+            agent.h \
+            cubebasic.h \
+            agentmanager.h \
+            agentfactory.h \
+            agentmanagerfactory.h \
+            fann/*.h
 
 OTHER_FILES +=
 
-LIBS += ".\libfloatfann.a"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+LIBS += "D:\Projects\CPU\CPP\Qt\CubeSimulation\libfloatfann.a"

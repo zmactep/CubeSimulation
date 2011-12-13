@@ -46,7 +46,13 @@ Environment::~Environment()
 void Environment::simulationStep( void )
 {
   static int i = 0;
+  static int j = 0;
   qDebug() << "Turn: " << i;
+
+  if(j++ == 5) {
+    qDebug() << "Infection increased for " << realMap->updateInfectionState();
+    j = 0;
+  }
 
   teams[i]->setEnemy(getEnemyAgents(i));
   teams[i]->makeStep();

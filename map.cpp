@@ -263,3 +263,36 @@ bool Map::getSubMapCoord( int x, int y, int z, int rad, int* coord)
 
   return true;
 }
+
+int Map::updateInfectionState( void )
+{
+  int counter = 0;
+
+  for( int y = 0; y < levels; y++ )
+    for( int z = 0; z < height; z++ )
+      for(  int x = 0; x < width; x++ )
+      {
+        int infection = getInfection(x, y, z);
+        if(infection < THRESHOLD_INFECTION)
+          continue;
+
+        Cube *cube;
+
+        for( int i = -1; i < 2; i++ )
+          for( int j = -1; j < 2; j++ )
+            for( int k = -1; k < 2; k++ )
+            {
+              if(!i &&!j && !k)
+                continue;
+
+              cube = getCube(x+k, y+i, z+j);
+              if(cube && !cube->isTransparent())
+              {
+                int inf = cube->getInfection();
+                counter += cube->incInfection() - inf;
+              }
+            }
+      }
+
+  return counter;
+}

@@ -7,7 +7,8 @@
 /*!
   Maximum possible infection of one CubeBasic.
 */
-#define MAX_INFECTION 10
+#define MAX_INFECTION       8
+#define THRESHOLD_INFECTION 4
 
 //!  CubeBasic class.
 /*!

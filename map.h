@@ -281,6 +281,14 @@ public:
   */
   int getTransparentCubesCount( void );
 
+
+  //! Update infection method.
+  /*!
+    Spread infection into the Map cubes
+    \return increment of Map infection
+  */
+  int updateInfectionState( void );
+
 private:
   //! Create map method.
   /*!

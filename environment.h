@@ -13,7 +13,7 @@
 #include "agentmanager.h"
 #include "agentmanagerfactory.h"
 
-// Params for agent`s simulation
+// Params for agent`s simulationj
 #define VIEW_RADIUS     3
 #define ONE_HIT_FORCE   20
 #define STEPS_PER_SECOND 10
