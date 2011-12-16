@@ -45,15 +45,25 @@ private:
   */
   AgentManager** teams;
 
+  //! Teams count.
+  /*!
+    Number of AgentManagers.
+  */
+  int teamCount;
+
 public:
   //!  Map setup constructor.
   /*!
     Creates Environment with given Map. Creates two teams.
     \param map a Map that will be used by Environment
     \param facts array of factories to create teams
+    \param amCount number of teams
+    \param afacts factories to create Agents in the teams
+    \param aCount number of Agents per Team
     \sa Environment(), setMap() and changeMap()
   */
-  Environment( Map* map = NULL, AgentManagerFactory *facts = NULL );
+  Environment( Map* map = NULL, AgentManagerFactory *facts = NULL, int amCount = 0,
+                                AgentFactory *afacts = NULL, int aCount = 0 );
 
   //!  Destructor.
   /*!

@@ -61,7 +61,7 @@ bool Map::loadLevelMask( int l, bool** flags )
 
   for( int i = 0; i < height; i++ )
     for( int j = 0; j < width; j++ )
-      cubes[l][i][j].setTransparent(flags[i][j]);
+      cubes[l][i][j].setTransparent(!flags[i][j]);
 
   return true;
 }
@@ -97,14 +97,12 @@ bool Map::appendSubMap( Map* app_map,
   if(!getSubMapCoord(x,y,z,rad,coord))
     return false;
 
-  for( int i = 0; i < app_map->levels; i++ )
-    for( int j = 0; j < app_map->height; j++ )
-      for( int k = 0; k < app_map->width; k++ )
+  for( int i = coord[4]; i < coord[5]; i++ )
+    for( int j = coord[2]; j < coord[3]; j++ )
+      for( int k = coord[0]; k < coord[1]; k++ )
       {
-        cubes[i+coord[4]][j+coord[2]][k+coord[0]].setTransparent(
-                                       app_map->cubes[i][j][k].isTransparent());
-        cubes[i+coord[4]][j+coord[2]][k+coord[0]].setInfection(
-                                       app_map->cubes[i][j][k].getInfection());
+        cubes[i][j][k].setTransparent(app_map->cubes[i-coord[04]][j-coord[2]][k-coord[0]].isTransparent());
+        cubes[i][j][k].setInfection(app_map->cubes[i-coord[04]][j-coord[2]][k-coord[0]].getInfection());
       }
 
   return true;
@@ -273,7 +271,7 @@ int Map::updateInfectionState( void )
       for(  int x = 0; x < width; x++ )
       {
         int infection = getInfection(x, y, z);
-        if(infection < THRESHOLD_INFECTION)
+        if(infection < MAX_INFECTION)
           continue;
 
         Cube *cube;
@@ -292,6 +290,9 @@ int Map::updateInfectionState( void )
                 counter += cube->incInfection() - inf;
               }
             }
+
+        getCube(x,y,z)->setInfection(0);
+        getCube(x,y,z)->setTransparent(true);
       }
 
   return counter;

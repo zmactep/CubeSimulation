@@ -1,24 +1,31 @@
 #include "environment.h"
 
 
-Environment::Environment( Map* map, AgentManagerFactory *facts )
+Environment::Environment( Map* map, AgentManagerFactory *facts, int amCount, AgentFactory *afacts, int aCount )
 {
   realMap = map;
 
   startFlag = false;
 
 
-  if(facts == NULL)
+  if(facts == NULL || amCount < 1)
     teams = NULL;
   else
   {
-    teams = new AgentManager*[2];
-    teams[0] = facts[0].createManagers(1);
-    teams[1] = facts[1].createManagers(1);
+    teamCount = amCount;
 
-    AgentFactory fact;
-    teams[0]->createManager(map, &fact, 2);
-    teams[1]->createManager(map, &fact, 2);
+    teams = new AgentManager*[amCount];
+    for( int i = 0; i < amCount; i++ ) {
+      teams[i] = facts[i].createManagers(1);
+    }
+
+    AgentFactory afact;
+    if(afacts != NULL && aCount > 0)
+      for( int i = 0; i < amCount; i++ )
+        teams[i]->createManager(realMap, &afacts[i], aCount);
+    else
+      for( int i = 0; i < amCount; i++ )
+        teams[i]->createManager(realMap, &afact, 2);
   }
 //  connect(this, SIGNAL(stateChanged()), this, SLOT(slot_nextStep()));
   start();
@@ -54,11 +61,13 @@ void Environment::simulationStep( void )
     j = 0;
   }
 
+  qDebug() << "Before set enemy!";
   teams[i]->setEnemy(getEnemyAgents(i));
+  qDebug() << "After set enemy!";
   teams[i]->makeStep();
 
   i++;
-  if(i > 1)
+  if(i > teamCount-1)
     i = 0;
 }
 

@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 
+#include <QDebug>
 #include <QList>
 
 #include "cubebasic.h"

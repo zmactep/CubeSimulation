@@ -51,6 +51,22 @@ public:
   */
   CubeSimulationWidget(QWidget *parent = 0);
 
+
+  //! Constructor.
+  /*!
+    Creates the interface and Environment for the simulation.
+    Map will be genered from the file, Agents will be same a AMF type.
+    \param mapFile filename for Map load
+    \param facts AgentManagerFactorys for simulation
+    \param amCount number of teams
+    \param afacts factories to create Agents in the teams
+    \param aCount number of Agents per Team
+    \param parent a parent object
+  */
+  CubeSimulationWidget(QString mapFile, AgentManagerFactory *facts = NULL, int amCount = 0,
+                                        AgentFactory *afacts = NULL, int aCount = 0,
+                                        QWidget *parent = 0);
+
   //! Destructor.
   /*!
     Deletes all used memory when the object`s live ends.
@@ -86,6 +102,12 @@ private:
     \param h an integer height of each level
   */
   void initEnvironment( int l, int w, int h );
+
+  //! Init method.
+  /*!
+    Inits some stuff for widget working.
+  */
+  void init( void );
 };
 
 #endif // CUBESIMULATIONWIDGET_H

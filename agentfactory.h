@@ -6,7 +6,7 @@
 class AgentFactory
 {
 public:
-  virtual Agent* createAgents( int number )
+  virtual Agent* createAgents( int number, int param = 0 )
   {
     return new Agent[number];
   }

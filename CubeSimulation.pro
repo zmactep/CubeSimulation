@@ -27,9 +27,11 @@ HEADERS  += cubesimulationwidget.h \
             cubebasic.h \
             agentmanager.h \
             agentfactory.h \
-            agentmanagerfactory.h \
-            fann/*.h
+            agentmanagerfactory.h
 
-OTHER_FILES +=
+OTHER_FILES += resources/*.*
 
-LIBS += "D:\Projects\CPU\CPP\Qt\CubeSimulation\libfloatfann.a"
+LIBS +=
+
+RESOURCES += \
+    resources.qrc

@@ -17,7 +17,7 @@ struct Point3D
 /*!
   The maximum distanse from the look point to generate new map.
 */
-#define MAX_VIEW_RADIUS 5
+#define MAX_VIEW_RADIUS 8
 
 //!  Map class.
 /*!
